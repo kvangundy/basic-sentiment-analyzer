@@ -5,12 +5,12 @@ CREATE
 (:Polarity {polarity:"positive"}),
 (:Polarity {polarity:"negative"});
 USING PERIODIC COMMIT
-LOAD CSV WITH HEADERS FROM "file:///Users/kevinvangundy/Desktop/Neo4j-Projects/aGraph3Ways/sentimentDict.csv" AS line
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/sentimentDict.csv" AS line
 WITH line
 MERGE (a:Word {word:line.word})
 ON CREATE SET a.partSpeech = line.wordType, a.wordType = line.stype;
 USING PERIODIC COMMIT
-LOAD CSV WITH HEADERS FROM "file:///Users/kevinvangundy/Desktop/Neo4j-Projects/aGraph3Ways/sentimentDict.csv" AS line
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/sentimentDict.csv" AS line
 WITH line
 WHERE NOT line.polarity = 'neutral'
 MATCH (w:Word {word:line.word}), (p:Polarity {polarity:line.polarity})
