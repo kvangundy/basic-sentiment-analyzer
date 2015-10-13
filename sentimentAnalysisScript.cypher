@@ -16,23 +16,26 @@ CREATE UNIQUE (wordReview)-[:TEMP]->(wordSentiment);
 //scoring function
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
 OPTIONAL MATCH pos = (n:Review)-[:IN_REVIEW]-(wordReview)-[:TEMP]-(word)-[:SENTIMENT]-(:Polarity {polarity:'positive'})
-WITH n, count(pos) as plus
+WITH n, toFloat(count(pos)) as plus
 OPTIONAL MATCH neg = (n:Review)-[:IN_REVIEW]-(wordReview)-[:TEMP]-(word)-[:SENTIMENT]-(:Polarity {polarity:'negative'})
-WITH plus, COUNT(neg) as minus, n
-SET n.sentimentScore = plus - minus;
+WITH ((plus - COUNT(neg))/n.wordCount) as score, n
+SET n.sentimentScore = score;
 //
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
-WHERE n.sentimentScore > 0
+//5% polarization
+WHERE n.sentimentScore >= (.05)
 SET n.sentiment = 'positive', n.analyzed = TRUE
 DELETE w, r, rr;
 //
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
-WHERE n.sentimentScore < 0
+//5% polarization
+WHERE n.sentimentScore <= (-.05)
 SET n.sentiment = 'negative', n.analyzed = TRUE
 DELETE w, r, rr;
 //
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
-WHERE n.sentimentScore = 0
+//5% polarization
+WHERE (.05) > n.sentimentScore > (-.05)
 SET n.sentiment = 'neutral', n.analyzed = TRUE
 DELETE w, r, rr;
 //
