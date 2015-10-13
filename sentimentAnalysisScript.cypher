@@ -1,4 +1,4 @@
-//analizamatic
+//algo starts here
 CREATE INDEX ON :ReviewWords(word);
 //
 MATCH (n:Review)
@@ -26,7 +26,7 @@ WHERE n.sentimentScore > 0
 SET n.sentiment = 'positive', n.analyzed = TRUE
 DELETE w, r, rr;
 //
-MATCH (n:Review)-[rr:IN_REVIEW]-(w-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
+MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
 WHERE n.sentimentScore < 0
 SET n.sentiment = 'negative', n.analyzed = TRUE
 DELETE w, r, rr;
