@@ -13,6 +13,7 @@ MATCH (n:Review)-[:IN_REVIEW]-(wordReview), (wordSentiment:Word)-[:SENTIMENT]-(s
 WHERE wordReview.word = wordSentiment.word
 CREATE UNIQUE (wordReview)-[:TEMP]->(wordSentiment);
 //
+//scoring function
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
 OPTIONAL MATCH pos = (n:Review)-[:IN_REVIEW]-(wordReview)-[:TEMP]-(word)-[:SENTIMENT]-(:Polarity {polarity:'positive'})
 WITH n, count(pos) as plus
