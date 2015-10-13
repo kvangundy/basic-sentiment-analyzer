@@ -35,3 +35,7 @@ MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
 WHERE n.sentimentScore = 0
 SET n.sentiment = 'neutral', n.analyzed = TRUE
 DELETE w, r, rr;
+//
+//cleanup
+MATCH (:Review)-[r]-(deleteMe:ReviewWords)
+DELETE r, deleteMe;
