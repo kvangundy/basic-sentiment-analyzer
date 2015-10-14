@@ -1,5 +1,6 @@
 //algo starts here
 CREATE INDEX ON :ReviewWords(word);
+CREATE INDEX ON :Review(sentiment);
 //
 MATCH (n:Review)
 WHERE n.analyzed = FALSE
