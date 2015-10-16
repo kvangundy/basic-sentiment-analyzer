@@ -2,12 +2,12 @@
 //using test data from: http://ai.stanford.edu/~amaas/data/sentiment/
 
 USING PERIODIC COMMIT 5000
-LOAD CSV WITH HEADERS FROM "file:///Users/kevinvangundy/Desktop/Neo4j-Projects/SentimentAnalysis/stanforad/negatives.csv" as line
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/efficacyTesting/negatives.csv" as line
 WITH line
 CREATE (r:Review {review:toLOWER(line.review), trueSentiment:0, analyzed:FALSE});
 //
 USING PERIODIC COMMIT 5000
-LOAD CSV WITH HEADERS FROM "file:///Users/kevinvangundy/Desktop/Neo4j-Projects/SentimentAnalysis/stanforad/positives.csv" as line
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/efficacyTesting/positives.csv" as line
 WITH line
 CREATE (r:Review {review:toLOWER(line.review), trueSentiment:1, analyzed:FALSE});
 //
