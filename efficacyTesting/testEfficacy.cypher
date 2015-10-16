@@ -75,12 +75,12 @@ DELETE r, deleteMe;
 
 //finally comparing our test movie reviews' true scores to the results determined by our algorithim
 
-MATCH (n:Tweet {trueSentiment:1, sentiment:'negative'}) 
+MATCH (n:Review {trueSentiment:1, sentiment:'negative'}) 
 WITH toFloat(count(n)) as wrongs
-MATCH (nn:Tweet {trueSentiment:0, sentiment:'positive'})
+MATCH (nn:Review {trueSentiment:0, sentiment:'positive'})
 WITH (wrongs + count(nn)) as wrong
-MATCH (nnn:Tweet {sentiment:'neutral'})
+MATCH (nnn:Review {sentiment:'neutral'})
 WITH (wrong + count(nnn)) as wrongCount
-MATCH (total:Tweet)
+MATCH (total:Review)
 WITH 100*(1-toFloat(wrongCount/(COUNT(total)))) as percentCorrect
 RETURN percentCorrect;
