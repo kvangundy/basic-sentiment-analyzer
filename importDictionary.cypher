@@ -4,12 +4,11 @@ CREATE CONSTRAINT ON (p:Polarity) ASSERT p.polarity IS UNIQUE;
 CREATE
 (:Polarity {polarity:"positive"}),
 (:Polarity {polarity:"negative"});
-USING PERIODIC COMMIT
+USING PERIODIC COMMIT 5000
 LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/sentimentDict.csv" AS line
 WITH line
-MERGE (a:Word {word:line.word})
-ON CREATE SET a.partSpeech = line.wordType, a.wordType = line.stype;
-USING PERIODIC COMMIT
+CREATE (a:Word {word:line.word});
+USING PERIODIC COMMIT 5000
 LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/sentimentDict.csv" AS line
 WITH line
 WHERE NOT line.polarity = 'neutral'
