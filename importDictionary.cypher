@@ -11,6 +11,5 @@ CREATE (a:Word {word:line.word});
 USING PERIODIC COMMIT 5000
 LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/sentimentDict.csv" AS line
 WITH line
-WHERE NOT line.polarity = 'neutral'
 MATCH (w:Word {word:line.word}), (p:Polarity {polarity:line.polarity})
 MERGE (w)-[:SENTIMENT]->(p);
