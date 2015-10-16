@@ -1,5 +1,6 @@
-//stanfordTest
+//stanford cs lab movie review sentiment test data
 //using test data from: http://ai.stanford.edu/~amaas/data/sentiment/
+
 CREATE INDEX ON :ReviewWords(word);
 CREATE INDEX ON :Review(sentiment);
 
