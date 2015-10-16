@@ -10,6 +10,11 @@ CREATE (rw:ReviewWords {word:word})
 WITH n, rw
 CREATE (rw)-[:IN_REVIEW]->(n);
 //
+//wordCounts
+MATCH (n:Review)
+WITH n, size((n)<-[:IN_REVIEW]-()) as wordCount
+SET n.wordCount = wordCount;
+//
 MATCH (n:Review)-[:IN_REVIEW]-(wordReview), (wordSentiment:Word)-[:SENTIMENT]-(sentiment)
 WHERE wordReview.word = wordSentiment.word
 CREATE UNIQUE (wordReview)-[:TEMP]->(wordSentiment);
