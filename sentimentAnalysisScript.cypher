@@ -15,9 +15,12 @@ MATCH (n:Review)
 WITH n, size((n)<-[:IN_REVIEW]-()) as wordCount
 SET n.wordCount = wordCount;
 //
-MATCH (n:Review)-[:IN_REVIEW]-(wordReview), (wordSentiment:Word)-[:SENTIMENT]-(sentiment)
-WHERE wordReview.word = wordSentiment.word
-CREATE UNIQUE (wordReview)-[:TEMP]->(wordSentiment);
+MATCH (n:Review)-[:IN_REVIEW]-(wordReview)
+WITH distinct wordReview
+MATCH  (wordSentiment:Word)
+WHERE wordReview.word = wordSentiment.word AND (wordSentiment)-[:SENTIMENT]-()
+
+MERGE (wordReview)-[:TEMP]->(wordSentiment);
 //
 //scoring function
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
