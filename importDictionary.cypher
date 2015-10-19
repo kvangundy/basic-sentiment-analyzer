@@ -13,7 +13,7 @@ CREATE
 USING PERIODIC COMMIT 5000
 LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/ThreeEye-neo4j-sentiment-analyzer/master/sentimentDict.csv" AS line
 WITH line
-CREATE (a:Word {word:line.word});
+MERGE (a:Word {word:line.word});
 USING PERIODIC COMMIT 5000
 LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/ThreeEye-neo4j-sentiment-analyzer/master/sentimentDict.csv" AS line
 WITH line
