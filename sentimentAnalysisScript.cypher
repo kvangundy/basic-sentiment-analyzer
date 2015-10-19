@@ -37,21 +37,20 @@ SET n.sentimentScore = score;
 
 //assigning postive, negative, or neutral sentiment and deleting TEMP relationships
 
+//based on percentage of pos or negatives words in reviews, detemining sentiment pos, neg, or neutral
+
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
-//5% polarization
-WHERE n.sentimentScore >= (.05)
+WHERE n.sentimentScore >= (.001)
 SET n.sentiment = 'positive', n.analyzed = TRUE
 DELETE w, r, rr;
 
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
-//5% polarization
-WHERE n.sentimentScore <= (-.05)
+WHERE n.sentimentScore <= (-.001)
 SET n.sentiment = 'negative', n.analyzed = TRUE
 DELETE w, r, rr;
 
 MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
-//5% polarization
-WHERE (.05) > n.sentimentScore > (-.05)
+WHERE (.001) > n.sentimentScore > (-.001)
 SET n.sentiment = 'neutral', n.analyzed = TRUE
 DELETE w, r, rr;
 
