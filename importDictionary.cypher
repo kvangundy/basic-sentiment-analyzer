@@ -11,11 +11,11 @@ CREATE
 //import corpus
 
 USING PERIODIC COMMIT 5000
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/sentimentDict.csv" AS line
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/ThreeEye-neo4j-sentiment-analyzer/master/sentimentDict.csv" AS line
 WITH line
 CREATE (a:Word {word:line.word});
 USING PERIODIC COMMIT 5000
-LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/neo4j-sentiment-analysis/master/sentimentDict.csv" AS line
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/kvangundy/ThreeEye-neo4j-sentiment-analyzer/master/sentimentDict.csv" AS line
 WITH line
 MATCH (w:Word {word:line.word}), (p:Polarity {polarity:line.polarity})
 MERGE (w)-[:SENTIMENT]->(p);
