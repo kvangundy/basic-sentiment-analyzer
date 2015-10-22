@@ -2,6 +2,7 @@
 //using test data from: http://ai.stanford.edu/~amaas/data/sentiment/
 
 CREATE INDEX ON :ReviewWords(word);
+CREATE INDEX ON :Keyword(word);
 CREATE INDEX ON :Review(sentiment);
 
 USING PERIODIC COMMIT 5000
@@ -34,9 +35,9 @@ SET n.wordCount = wordCount;
 
 MATCH (n:Review)-[:IN_REVIEW]-(wordReview)
 WITH distinct wordReview
-MATCH  (wordSentiment:Word)
-WHERE wordReview.word = wordSentiment.word AND (wordSentiment)-[:SENTIMENT]-()
-MERGE (wordReview)-[:TEMP]->(wordSentiment);
+MATCH  (keyword:Keyword)
+WHERE wordReview.word = keyword.word AND (keyword)-[:SENTIMENT]-()
+MERGE (wordReview)-[:TEMP]->(keyword);
 
 
 //start of sentiment scoring function
