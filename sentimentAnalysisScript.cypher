@@ -22,16 +22,16 @@ SET n.wordCount = wordCount;
 
 MATCH (n:Review)-[:IN_REVIEW]-(wordReview)
 WITH distinct wordReview
-MATCH  (wordSentiment:Word)
-WHERE wordReview.word = wordSentiment.word AND (wordSentiment)-[:SENTIMENT]-()
-MERGE (wordReview)-[:TEMP]->(wordSentiment);
+MATCH  (keyword:Keyword)
+WHERE wordReview.word = keyword.word AND (keyword)-[:SENTIMENT]-()
+MERGE (wordReview)-[:TEMP]->(keyword);
 
 //scoring the reviews
 
-MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
-OPTIONAL MATCH pos = (n:Review)-[:IN_REVIEW]-(wordReview)-[:TEMP]-(word)-[:SENTIMENT]-(:Polarity {polarity:'positive'})
+MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(keyword)-[:SENTIMENT]-(:Polarity)
+OPTIONAL MATCH pos = (n:Review)-[:IN_REVIEW]-(wordReview)-[:TEMP]-(keyword)-[:SENTIMENT]-(:Polarity {polarity:'positive'})
 WITH n, toFloat(count(pos)) as plus
-OPTIONAL MATCH neg = (n:Review)-[:IN_REVIEW]-(wordReview)-[:TEMP]-(word)-[:SENTIMENT]-(:Polarity {polarity:'negative'})
+OPTIONAL MATCH neg = (n:Review)-[:IN_REVIEW]-(wordReview)-[:TEMP]-(keyword)-[:SENTIMENT]-(:Polarity {polarity:'negative'})
 WITH ((plus - COUNT(neg))/n.wordCount) as score, n
 SET n.sentimentScore = score;
 
@@ -39,17 +39,17 @@ SET n.sentimentScore = score;
 
 //based on percentage of pos or negatives words in reviews, detemining sentiment pos, neg, or neutral
 
-MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
+MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(keyword)-[:SENTIMENT]-(:Polarity)
 WHERE n.sentimentScore >= (.001)
 SET n.sentiment = 'positive', n.analyzed = TRUE
 DELETE w, r, rr;
 
-MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
+MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(keyword)-[:SENTIMENT]-(:Polarity)
 WHERE n.sentimentScore <= (-.001)
 SET n.sentiment = 'negative', n.analyzed = TRUE
 DELETE w, r, rr;
 
-MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(word)-[:SENTIMENT]-(:Polarity)
+MATCH (n:Review)-[rr:IN_REVIEW]-(w)-[r:TEMP]-(keyword)-[:SENTIMENT]-(:Polarity)
 WHERE (.001) > n.sentimentScore > (-.001)
 SET n.sentiment = 'neutral', n.analyzed = TRUE
 DELETE w, r, rr;
